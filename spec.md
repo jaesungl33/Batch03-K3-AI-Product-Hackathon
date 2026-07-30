@@ -293,9 +293,23 @@ file/trang và không gửi toàn bộ PDF ra dịch vụ ngoài. Chạy lại �
 | Spec và changelog | Nguyễn Trường An | Đã hoàn thiện nội dung kỹ thuật/evidence |
 | Evidence mining và JTBD/Canvas | Dương Hoàng Lâm | Đã có phương pháp và số liệu; còn bổ sung Canvas |
 | Golden set/evaluation và dry run | Phạm Đức Hiệp | Đã có 36 case transcript + 24 case PDF và hai lượt kết quả đầy đủ |
-| Tổng hợp feedback và cập nhật sản phẩm | Nguyễn Trường An | Thực hiện sau vòng user test |
+| Tổng hợp feedback và cập nhật sản phẩm | Nguyễn Trường An | Đã mở validation log cho 3 người; còn bổ sung 2 người, task, quan sát và quote |
 
 ### Willing users và vòng validation CP5
+
+Danh sách người dùng do nhóm cung cấp:
+
+| Người dùng | Mã học viên | Đánh giá | Trạng thái bằng chứng |
+|---|---|---|---|
+| Nguyễn Đình Bình | 2A202601091 | Tốt | Đã điền 3 task, kết quả và quote nguyên văn xác nhận |
+| Đào Văn Đà | 2A202601089 | Tốt | Đã điền 3 task, kết quả và quote nguyên văn xác nhận |
+| Nguyễn Mạnh Cường | 2A202601361 | Tốt | Đã điền 3 task, kết quả và quote nguyên văn xác nhận |
+
+Nhóm đã có đủ 3 willing users có tên cụ thể. Chi tiết 9 task và kết quả được lưu
+tại `validation/feedback-log.md` và `validation/feedback-log.csv`. Các câu hỏi
+học liệu lấy từ `eval/pdf-golden-set.json`; trạng thái đạt được đối chiếu với
+evaluation và automated ticket-flow test. Kết quả “Tốt” và ba quote nguyên văn
+trong log đã được nhóm xác nhận với người dùng.
 
 Ba câu hỏi validation cố định:
 
@@ -337,6 +351,7 @@ Chọn phương án 2 vì giảm false-positive ở case cost-of-error cao.
 | 30/07/2026 | Chốt quality bar 85% + 100% safe routing high-cost | Cost-of-error của deadline/kiến thức sai cao |
 | 30/07/2026 | Thêm preflight scope guard và siết prompt relevance/grounded answer | Lượt transcript ban đầu có 9/36 case trả lời quá mức; chạy lại đạt 36/36, không làm giảm các case dương tính |
 | 30/07/2026 | Thêm fallback TF-IDF ký tự cục bộ cho hai PDF được cấp | P16–P19 thiếu/sai nguồn Day 2; chạy lại bộ PDF tăng từ 20/24 lên 24/24 |
+| 30/07/2026 | Giữ nguồn tham chiếu, ticket ID và hàng đợi Coach | 3/3 willing users đánh giá Tốt; quote xác nhận cho thấy các thành phần này giúp kiểm tra câu trả lời và theo dõi escalation |
 
 ## Phụ lục — Kiến trúc triển khai
 
@@ -364,6 +379,6 @@ Teacher dashboard ──► approved answer ──► Gemini embedding ──►
 ## Việc bắt buộc còn thiếu trước khi nộp theo rubric
 
 1. Điền Zone sau khi ban tổ chức/nhóm xác nhận.
-2. Thu thập ≥3 willing users có tên và ≥5 feedback từ ≥5 người ngoài nhóm.
-3. Ghi feedback vào `validation/` và cập nhật changelog theo feedback.
+2. Bổ sung ít nhất 2 người để đủ ≥5 feedback từ ≥5 người ngoài nhóm; 3 người hiện có đã đủ task, quan sát và quote nguyên văn xác nhận.
+3. Bổ sung thời điểm test và consent sử dụng feedback cho từng người.
 4. Bổ sung worksheet JTBD/Canvas CP1 và link artifact evidence mining có script chạy lại.
