@@ -1,0 +1,358 @@
+<!doctype html><html lang="vi"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLearn Tutor — RAG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#16264d;--navy-soft:#22366b;--red:#c0322c;--red-soft:#fef2f1;--page:#eef1f7;
+    --line:#e2e7f0;--ink:#1c2333;--muted:#6b7688;--green:#12855f;--green-soft:#e7f6f0;
+    --radius:16px;--shadow:0 1px 2px rgba(22,38,77,.04),0 10px 30px rgba(22,38,77,.07);}
+  *{box-sizing:border-box}html,body{margin:0;height:100%}
+  body{font-family:"Be Vietnam Pro",system-ui,sans-serif;background:var(--page);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  button{font-family:inherit}
+  .brandnav{background:#fff;border-bottom:1px solid var(--line);height:64px;display:flex;align-items:center;padding:0 22px;gap:18px;flex:none}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;color:var(--navy);letter-spacing:-.02em}
+  .logo .mark{width:29px;height:29px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(150deg,var(--navy),var(--navy-soft));border-radius:8px;font-size:15px}
+  .logo .mark::after{content:"V"}.logo b{color:var(--red)}
+  .rolebadge{font-size:12px;font-weight:700;letter-spacing:.05em;padding:5px 12px;border-radius:999px}
+  .rolebadge.stu{color:var(--navy);background:#eaf0fb}.rolebadge.coach{color:var(--red);background:var(--red-soft)}
+  .brandnav .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .switchrole{border:1px solid var(--line);background:#fff;color:var(--muted);font-weight:600;font-size:13px;padding:8px 14px;border-radius:10px;cursor:pointer}
+  .pill-user{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--navy)}
+  .pill-user .av{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700}
+  .screen{display:none;height:100vh;flex-direction:column}.screen.show{display:flex}
+  #landing{background:radial-gradient(1200px 500px at 50% -10%,#dfe6f5,var(--page))}
+  .land-wrap{margin:auto;text-align:center;padding:40px 24px;max-width:760px}
+  .land-eyebrow{color:var(--red);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+  .land-wrap h1{font-size:40px;line-height:1.1;color:var(--navy);letter-spacing:-.02em;margin:12px 0 8px;font-weight:800}
+  .land-wrap p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto 34px}
+  .roles{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:640px){.roles{grid-template-columns:1fr}.land-wrap h1{font-size:30px}}
+  .rolecard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 26px;text-align:left;cursor:pointer;box-shadow:var(--shadow);transition:.18s}
+  .rolecard:hover{transform:translateY(-4px);border-color:var(--navy)}
+  .rolecard .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px;margin-bottom:16px}
+  .rolecard.stu .ic{background:#eaf0fb}.rolecard.coach .ic{background:var(--red-soft)}
+  .rolecard h3{margin:0 0 6px;color:var(--navy);font-size:20px}.rolecard p{margin:0;color:var(--muted);font-size:14px}
+  .rolecard .go{margin-top:18px;font-weight:700;font-size:14px}.rolecard.stu .go{color:var(--navy)}.rolecard.coach .go{color:var(--red)}
+  .stu-body{flex:1;display:grid;grid-template-columns:1fr 0fr;transition:grid-template-columns .32s ease;min-height:0}
+  .stu-body.slideopen{grid-template-columns:1fr 460px}
+  @media(max-width:820px){.stu-body.slideopen{grid-template-columns:1fr}}
+  .chatcol{display:flex;flex-direction:column;min-height:0;min-width:0}
+  .chatscroll{flex:1;overflow-y:auto;padding:26px 0}
+  .chatinner{max-width:720px;margin:0 auto;padding:0 22px;display:flex;flex-direction:column;gap:18px}
+  .welcome{text-align:center;padding:26px 0 6px}
+  .welcome .bot-av{width:52px;height:52px;border-radius:15px;margin:0 auto 14px;background:linear-gradient(150deg,var(--red),#e05a4f);display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px}
+  .welcome h2{color:var(--navy);font-size:23px;margin:0 0 6px;letter-spacing:-.01em}
+  .welcome p{color:var(--muted);font-size:14.5px;max-width:460px;margin:0 auto}
+  .msg{display:flex;gap:11px;max-width:100%}
+  .msg .av{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;font-weight:800;font-size:13px}
+  .msg.bot .av{background:linear-gradient(150deg,var(--red),#e05a4f);color:#fff}
+  .msg.me{flex-direction:row-reverse}.msg.me .av{background:var(--navy);color:#fff;font-size:11px}
+  .msg .body{max-width:82%}.msg.me .body{display:flex;justify-content:flex-end}
+  .bubble{padding:12px 15px;border-radius:14px;font-size:14.5px;line-height:1.6}
+  .msg.bot .bubble{background:#fff;border:1px solid var(--line);border-top-left-radius:4px}
+  .msg.me .bubble{background:var(--navy);color:#fff;border-top-right-radius:4px}
+  .found{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--green);background:var(--green-soft);border:1px solid #bfe6d5;padding:5px 11px;border-radius:999px;margin-bottom:10px}
+  .answer-summary{white-space:pre-wrap}.answer-summary b{color:var(--navy)}
+  .src-list{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+  .slide-ref{border:1px solid var(--line);border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:11px;background:#fafbfe;cursor:pointer;transition:.15s}
+  .slide-ref:hover{border-color:var(--red);background:#fff}
+  .slide-ref .thumb{width:52px;height:32px;border-radius:6px;flex:none;background:linear-gradient(150deg,#0f1b38,#22366b);display:grid;place-items:center;color:#8ba0d1;font-size:8.5px;font-weight:700}
+  .slide-ref .info{flex:1;min-width:0}
+  .slide-ref .info .t{font-weight:700;font-size:12.5px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .slide-ref .info .s{font-size:11.5px;color:var(--muted)}
+  .slide-ref .open-ic{color:var(--red);font-weight:700;font-size:12.5px;flex:none}
+  .lab-ref{margin-top:9px}
+  .lab-ref .btn-lab{display:inline-flex;align-items:center;gap:7px;background:var(--green-soft);color:var(--green);border:1px solid #bfe6d5;font-weight:700;font-size:12.5px;padding:8px 13px;border-radius:10px;cursor:pointer}
+  .pipe{border:1px dashed var(--line);border-radius:12px;padding:11px 13px;background:#fff}
+  .pipe .pt{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .steps{display:flex;flex-direction:column;gap:6px}
+  .step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);opacity:.4;transition:.25s}
+  .step .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:10px;font-weight:700;flex:none;background:#fff}
+  .step.active{opacity:1;color:var(--navy)}.step.active .dot{border-color:var(--red);color:var(--red)}
+  .step.done{opacity:1;color:var(--navy)}.step.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+  .step.done .dot::after{content:"✓"}.step.done .dot span{display:none}
+  .step .meta{margin-left:auto;font-size:10.5px;color:var(--red);font-weight:700}
+  .typing{display:inline-flex;gap:4px}
+  .typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:bl 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+  @keyframes bl{0%,60%,100%{opacity:.25}30%{opacity:1}}
+  .composer-wrap{border-top:1px solid var(--line);background:#fff;padding:14px 0}
+  .composer{max-width:720px;margin:0 auto;padding:0 22px}
+  .chips{display:flex;gap:8px;margin-bottom:11px;flex-wrap:wrap}
+  .chip{font-size:12.5px;font-weight:600;color:var(--navy);background:#f4f6fb;border:1px solid var(--line);padding:8px 12px;border-radius:999px;cursor:pointer}
+  .chip:hover{border-color:var(--red);color:var(--red)}
+  .cbox{display:flex;gap:9px}
+  .cbox input{flex:1;border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-family:inherit;font-size:14.5px;outline:none}
+  .cbox input:focus{border-color:var(--navy)}
+  .cbox button{border:0;background:var(--navy);color:#fff;font-weight:700;font-size:14.5px;padding:0 20px;border-radius:12px;cursor:pointer}
+  .cbox button:disabled{opacity:.5}
+  .slidecol{min-width:0;overflow:hidden;border-left:1px solid var(--line);background:#fff;display:flex;flex-direction:column}
+  .stu-body:not(.slideopen) .slidecol{border-left:0}
+  .drawer-head{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line);flex:none}
+  .drawer-head .h{font-weight:700;color:var(--navy);font-size:14px}
+  .drawer-head .cls{margin-left:auto;width:30px;height:30px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;color:var(--muted);font-size:16px}
+  .drawer-body{flex:1;overflow-y:auto;padding:18px}
+  .slide-canvas{border-radius:12px;color:#fff;padding:24px 26px;position:relative;background:linear-gradient(150deg,#0f1b38,#1a2b56);min-height:200px}
+  .slide-canvas .stamp{position:absolute;top:14px;right:16px;font-size:10.5px;font-weight:700;color:#8ba0d1;border:1px solid rgba(255,255,255,.18);padding:3px 8px;border-radius:7px}
+  .slide-canvas .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#93a6d6;font-weight:700}
+  .slide-canvas h2{font-size:18px;margin:7px 0 12px;line-height:1.2;font-weight:800}
+  .slide-canvas p{color:#d4ddf2;font-size:13.5px;line-height:1.65;margin:0}
+  .drawer-meta{margin-top:14px;font-size:12.5px;color:var(--muted)}.drawer-meta .src{margin-top:4px;font-weight:600;color:var(--navy)}
+  .drawer-thumbs{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .mini{padding:6px 9px;border-radius:8px;border:2px solid var(--line);background:#fff;cursor:pointer;color:var(--navy);font-size:11px;font-weight:700}
+  .mini.on{border-color:var(--red);color:var(--red)}
+  .coach-scroll{flex:1;overflow-y:auto;padding:26px 0}
+  .coach-inner{max-width:1080px;margin:0 auto;padding:0 24px}
+  .coach-inner .eyebrow{color:var(--red);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+  .coach-inner h1{color:var(--navy);font-size:28px;margin:8px 0 4px;letter-spacing:-.01em}
+  .coach-inner .sub{color:var(--muted);font-size:15px;margin-bottom:22px}
+  .coach-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;align-items:start}
+  @media(max-width:880px){.coach-grid{grid-template-columns:1fr}}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .panel-head{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .panel-head .h{font-weight:700;color:var(--navy);font-size:15px}
+  .panel-head .tag{margin-left:auto;font-size:11px;font-weight:700;color:var(--red);background:var(--red-soft);padding:4px 10px;border-radius:999px}
+  .form-pad{padding:18px}
+  .field{margin-bottom:15px}.field label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:6px}
+  .field select,.field input{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;outline:none;background:#fff;color:var(--ink)}
+  .drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted);background:#fafbfe}
+  .drop b{color:var(--navy)}.drop .ic{font-size:22px}
+  .submit{width:100%;margin-top:4px;border:0;background:var(--red);color:#fff;font-weight:700;font-size:15px;padding:13px;border-radius:12px;cursor:pointer}
+  .submit:disabled{opacity:.6;cursor:default}
+  .ingest-log{padding:14px 18px}
+  .ilog-step{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);opacity:.4;transition:.3s}
+  .ilog-step:last-child{border-bottom:0}.ilog-step.active,.ilog-step.done{opacity:1}
+  .ilog-step .n{width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;font-weight:700;font-size:12px;background:var(--red-soft);color:var(--red)}
+  .ilog-step.done .n{background:var(--green);color:#fff}
+  .ilog-step .tt{font-weight:700;font-size:13.5px;color:var(--navy)}.ilog-step .dd{font-size:12.5px;color:var(--muted)}
+  .ilog-step .badge{margin-left:auto;font-size:11px;font-weight:700;color:var(--green);align-self:center}
+  table.mats{width:100%;border-collapse:collapse;font-size:13px}
+  table.mats th{text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line)}
+  table.mats td{padding:11px 14px;border-bottom:1px solid var(--line)}table.mats tr:last-child td{border-bottom:0}
+  .tp{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .tp.theory{color:var(--navy);background:#eaf0fb}.tp.lab{color:var(--green);background:var(--green-soft)}
+  .banner{background:var(--red-soft);color:var(--red);font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:10px;margin-bottom:14px;display:none}
+  .banner.show{display:block}
+</style></head><body>
+
+<!-- LANDING -->
+<div id="landing" class="screen show">
+  <div class="brandnav"><div class="logo"><span class="mark"></span>V<b>Learn</b></div>
+    <span class="rolebadge stu" style="margin-left:4px">VinUni AI Thực Chiến</span></div>
+  <div class="land-wrap">
+    <div class="land-eyebrow">VLearn Tutor · RAG Assistant</div>
+    <h1>Bạn đang đăng nhập với vai trò nào?</h1>
+    <p>Chọn vai trò để vào đúng không gian làm việc. Học viên hỏi bài, Lab Coach nộp & quản lý học liệu.</p>
+    <div class="roles">
+      <div class="rolecard stu" onclick="go('student')"><div class="ic">🎓</div><h3>Học viên</h3>
+        <p>Hỏi bất kỳ kiến thức nào — trợ lý tìm đúng buổi học, tóm tắt bài giảng và mở nguồn chi tiết khi cần.</p>
+        <div class="go">Vào không gian học tập →</div></div>
+      <div class="rolecard coach" onclick="go('coach')"><div class="ic">🧑‍🏫</div><h3>Lab Coach</h3>
+        <p>Nạp học liệu theo buổi, hệ thống embed vào cơ sở tri thức để học viên tra cứu.</p>
+        <div class="go">Vào bảng điều khiển →</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT -->
+<div id="student" class="screen">
+  <div class="brandnav"><div class="logo"><span class="mark"></span>V<b>Learn</b></div>
+    <span class="rolebadge stu">🎓 Học viên</span>
+    <div class="right"><span class="pill-user"><span class="av">LJ</span>Lee Jae Sung</span>
+      <button class="switchrole" onclick="go('landing')">Đổi vai trò</button></div></div>
+  <div class="stu-body" id="stuBody">
+    <div class="chatcol">
+      <div class="chatscroll" id="chatscroll"><div class="chatinner" id="chatinner">
+        <div class="welcome"><div class="bot-av">VT</div>
+          <h2>Bạn cần ôn lại kiến thức gì?</h2>
+          <p>Mình sẽ tìm xem nó được dạy ở buổi nào, tóm tắt lại bài giảng trên trường và mở đúng đoạn nguồn chi tiết cho bạn.</p></div>
+      </div></div>
+      <div class="composer-wrap"><div class="composer">
+        <div class="chips">
+          <button class="chip" onclick="ask('Attention và transformer hoạt động thế nào?')">Attention hoạt động thế nào?</button>
+          <button class="chip" onclick="ask('Làm sao xác định bài toán AI cho doanh nghiệp?')">Xác định bài toán AI?</button>
+          <button class="chip" onclick="ask('Temperature và top-k là gì?')">Temperature là gì?</button>
+        </div>
+        <div class="cbox"><input id="qinput" placeholder="Hỏi về một kiến thức bất kỳ trong khoá…" onkeydown="if(event.key==='Enter')ask(this.value)">
+          <button id="sendBtn" onclick="ask(document.getElementById('qinput').value)">Gửi</button></div>
+      </div></div>
+    </div>
+    <div class="slidecol">
+      <div class="drawer-head"><span class="h">📑 Nguồn chi tiết</span><button class="cls" onclick="closeSlide()">✕</button></div>
+      <div class="drawer-body" id="drawerBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- COACH -->
+<div id="coach" class="screen">
+  <div class="brandnav"><div class="logo"><span class="mark"></span>V<b>Learn</b></div>
+    <span class="rolebadge coach">🧑‍🏫 Lab Coach</span>
+    <div class="right"><span class="pill-user"><span class="av">LC</span>Coach workspace</span>
+      <button class="switchrole" onclick="go('landing')">Đổi vai trò</button></div></div>
+  <div class="coach-scroll"><div class="coach-inner">
+    <div class="eyebrow">VLearn · Quản lý học liệu</div>
+    <h1>Nạp & embed học liệu</h1>
+    <p class="sub">Bấm "Nạp & Embed" để (re)build cơ sở tri thức từ transcript trong thư mục <code>data/transcript</code>. Mỗi đoạn được gắn nhãn buổi/chủ đề rồi đưa vào ChromaDB.</p>
+    <div class="coach-grid">
+      <div class="panel">
+        <div class="panel-head"><span class="h">⬆️ Nạp học liệu</span><span class="tag">LAB COACH</span></div>
+        <div class="form-pad">
+          <div class="field"><label>Nguồn học liệu</label>
+            <select><option>data/transcript/ — 6 transcript bài giảng</option></select></div>
+          <div class="field"><label>Loại</label><select><option>Lý thuyết (theory)</option></select></div>
+          <div class="field"><label>File</label>
+            <div class="drop"><div class="ic">📄</div><div><b>6 file transcript</b> đã có sẵn trong data pack</div></div></div>
+          <button class="submit" id="ingestBtn" onclick="runIngest()">Nạp & Embed vào hệ thống</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="panel">
+          <div class="panel-head"><span class="h">⚙️ Ingestion pipeline</span><span class="tag" id="ingestState">CHỜ NẠP</span></div>
+          <div class="ingest-log" id="ingestLog">
+            <div class="ilog-step"><div class="n">1</div><div><div class="tt">Parse transcript</div><div class="dd">Tách theo mã đoạn [Txx-NNN]</div></div><div class="badge"></div></div>
+            <div class="ilog-step"><div class="n">2</div><div><div class="tt">Gắn metadata</div><div class="dd">day · topic · section · type · segment_code</div></div><div class="badge"></div></div>
+            <div class="ilog-step"><div class="n">3</div><div><div class="tt">Embed</div><div class="dd">Vector hoá từng đoạn</div></div><div class="badge"></div></div>
+            <div class="ilog-step"><div class="n">4</div><div><div class="tt">Lưu ChromaDB</div><div class="dd">Collection: vlearn_lectures</div></div><div class="badge"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="h">📚 Học liệu trong hệ thống</span><span class="tag" id="cntTag">—</span></div>
+          <table class="mats"><thead><tr><th>Buổi</th><th>Chủ đề</th><th>Loại</th><th>Đoạn</th></tr></thead>
+            <tbody id="matsBody"><tr><td colspan="4" style="color:var(--muted);text-align:center">Đang tải…</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<script>
+const API=location.origin;
+function go(s){document.querySelectorAll('.screen').forEach(el=>el.classList.remove('show'));
+  document.getElementById(s).classList.add('show');
+  if(s!=='student')closeSlide();
+  if(s==='coach')loadInventory();}
+
+/* ---------- student chat ---------- */
+const inner=document.getElementById('chatinner');
+const scroller=document.getElementById('chatscroll');
+const scroll=()=>scroller.scrollTop=scroller.scrollHeight;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+let busy=false, lastSources=[];
+
+function addMe(t){inner.insertAdjacentHTML('beforeend',
+  `<div class="msg me"><div class="av">LJ</div><div class="body"><div class="bubble"></div></div></div>`);
+  inner.lastElementChild.querySelector('.bubble').textContent=t;scroll();}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+async function ask(text){
+  text=(text||'').trim(); if(!text||busy)return; busy=true;
+  document.getElementById('sendBtn').disabled=true;
+  document.getElementById('qinput').value='';
+  const w=inner.querySelector('.welcome'); if(w)w.remove();
+  addMe(text);
+
+  const pid='p'+Date.now();
+  inner.insertAdjacentHTML('beforeend',`
+   <div class="msg bot"><div class="av">VT</div><div class="body"><div class="pipe" id="${pid}">
+     <div class="pt">🔎 Đang tìm trong học liệu</div><div class="steps">
+       <div class="step" data-s="0"><span class="dot"><span>1</span></span> Xác định buổi học chứa kiến thức <span class="meta"></span></div>
+       <div class="step" data-s="1"><span class="dot"><span>2</span></span> Lấy context bài giảng (filter theo buổi) <span class="meta"></span></div>
+       <div class="step" data-s="2"><span class="dot"><span>3</span></span> Tóm tắt cách kiến thức được dạy <span class="meta"></span></div>
+     </div></div></div></div>`);
+  scroll();
+  const steps=document.getElementById(pid).querySelectorAll('.step');
+
+  // fire the real API call in parallel with the animation
+  const callP=fetch(API+'/api/chat',{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({question:text})}).then(r=>r.json());
+
+  steps[0].classList.add('active'); await wait(650);
+  let data; try{ data=await callP; }catch(e){ data=null; }
+  const metas = data && data.found
+    ? [ (data.day_label||'')+' · '+(data.topic||''), 'filter day='+(data.day||''), (data.mode==='claude'?'claude ✓':'summary ✓') ]
+    : ['—','—','—'];
+  steps[0].querySelector('.meta').textContent=metas[0];
+  steps[0].classList.remove('active');steps[0].classList.add('done');
+  for(let i=1;i<3;i++){steps[i].classList.add('active');steps[i].querySelector('.meta').textContent=metas[i];
+    await wait(520);steps[i].classList.remove('active');steps[i].classList.add('done');}
+  await wait(200);
+
+  if(!data){ botText('Lỗi kết nối tới server. Kiểm tra backend đang chạy chưa.'); finish(); return; }
+  if(!data.found){ botText(data.answer||'Chưa tìm thấy kiến thức này.'); finish(); return; }
+
+  lastSources=data.sources||[];
+  const srcHtml=lastSources.map((s,i)=>`
+    <div class="slide-ref" onclick="openSlide(${i})">
+      <div class="thumb">${esc(s.segment_code)}</div>
+      <div class="info"><div class="t">${esc(s.section)}</div><div class="s">${esc(s.source_file)} · match ${s.score}</div></div>
+      <div class="open-ic">Mở ›</div></div>`).join('');
+  const labHtml=(data.lab&&data.lab.length)
+    ? `<div class="lab-ref"><button class="btn-lab" onclick='showLab(${JSON.stringify(data.lab).replace(/'/g,"&#39;")})'>🧪 Xem bài lab cùng buổi (${data.lab.length})</button></div>`
+    : '';
+  inner.insertAdjacentHTML('beforeend',`
+   <div class="msg bot"><div class="av">VT</div><div class="body"><div class="bubble">
+     <span class="found">✓ Tìm thấy ở ${esc(data.day_label)} · ${esc(data.topic)}</span>
+     <div class="answer-summary">${esc(data.answer)}</div>
+     <div class="src-list">${srcHtml}</div>${labHtml}
+   </div></div></div>`);
+  scroll(); finish();
+}
+function botText(t){inner.insertAdjacentHTML('beforeend',
+  `<div class="msg bot"><div class="av">VT</div><div class="body"><div class="bubble"></div></div></div>`);
+  inner.lastElementChild.querySelector('.bubble').textContent=t;scroll();}
+function finish(){busy=false;document.getElementById('sendBtn').disabled=false;}
+
+/* ---------- slide/source drawer ---------- */
+function openSlide(i){
+  const s=lastSources[i]; if(!s)return;
+  document.getElementById('stuBody').classList.add('slideopen');
+  const thumbs=lastSources.map((x,j)=>`<div class="mini ${j===i?'on':''}" onclick="openSlide(${j})">${esc(x.segment_code)}</div>`).join('');
+  document.getElementById('drawerBody').innerHTML=`
+    <div class="slide-canvas"><span class="stamp">${esc(s.segment_code)}</span>
+      <div class="kicker">${esc(s.section)}</div><h2>Trích bài giảng</h2>
+      <p>${esc(s.text)}</p></div>
+    <div class="drawer-meta">Trích từ transcript bài giảng trên lớp<div class="src">Nguồn: ${esc(s.source_file)} · đoạn ${esc(s.segment_code)}</div></div>
+    <div class="drawer-thumbs">${thumbs}</div>`;
+}
+function closeSlide(){document.getElementById('stuBody').classList.remove('slideopen');}
+function showLab(lab){
+  addMe('Xem bài lab cùng buổi');
+  const html=lab.map(s=>`<div class="slide-ref"><div class="thumb" style="background:linear-gradient(150deg,#0d3b2c,#12855f)">LAB</div>
+    <div class="info"><div class="t">${esc(s.section)}</div><div class="s">${esc(s.source_file)} · ${esc(s.segment_code)}</div></div></div>`).join('');
+  inner.insertAdjacentHTML('beforeend',`<div class="msg bot"><div class="av">VT</div><div class="body"><div class="bubble">
+    Bài lab thực hành liên quan cùng buổi:<div class="src-list">${html}</div></div></div></div>`);scroll();
+}
+
+/* ---------- coach ---------- */
+async function loadInventory(){
+  try{
+    const d=await fetch(API+'/api/inventory').then(r=>r.json());
+    document.getElementById('cntTag').textContent=d.count+' đoạn';
+    const rows=(d.rows||[]).map(r=>`<tr><td>${esc(r.day_label||'')}</td><td>${esc(r.topic||'')}</td>
+      <td><span class="tp ${r.type==='lab'?'lab':'theory'}">${esc(r.type||'')}</span></td><td>${r.chunks}</td></tr>`).join('');
+    document.getElementById('matsBody').innerHTML=rows||'<tr><td colspan="4" style="text-align:center;color:var(--muted)">Chưa có dữ liệu — bấm Nạp & Embed</td></tr>';
+  }catch(e){document.getElementById('matsBody').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--red)">Lỗi kết nối server</td></tr>';}
+}
+async function runIngest(){
+  const btn=document.getElementById('ingestBtn'); if(btn.disabled)return;
+  btn.disabled=true;btn.textContent='Đang xử lý…';
+  document.getElementById('ingestState').textContent='ĐANG CHẠY';
+  const steps=document.querySelectorAll('#ingestLog .ilog-step');
+  steps.forEach(s=>{s.classList.remove('active','done');s.querySelector('.badge').textContent='';});
+  const callP=fetch(API+'/api/ingest',{method:'POST'}).then(r=>r.json());
+  for(let i=0;i<steps.length;i++){steps[i].classList.add('active');await wait(600);
+    steps[i].classList.remove('active');steps[i].classList.add('done');}
+  let res; try{res=await callP;}catch(e){res=null;}
+  if(res){
+    const badges=[res.chunks+' đoạn','metadata ✓','backend: '+res.backend, 'store: '+res.count_in_store];
+    steps.forEach((s,i)=>s.querySelector('.badge').textContent=badges[i]);
+    document.getElementById('ingestState').textContent='HOÀN TẤT ✓';
+    loadInventory();
+  }else{document.getElementById('ingestState').textContent='LỖI';}
+  btn.textContent='Nạp lại';btn.disabled=false;
+}
+</script>
+</body></html>
