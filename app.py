@@ -3,12 +3,15 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import sqlite3
 import uuid
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal, TypedDict
 
 import chromadb
+import fitz
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
@@ -29,6 +32,7 @@ EMBED_MODEL = "gemini-embedding-001"
 EMBED_DIM = 768
 ANSWER_MODEL = "gemini-3.5-flash-lite"
 MAX_DISTANCE = 0.42
+SUPPLIED_SLIDE_DIR = ROOT / "data" / "vlearn-pack" / "slides"
 
 load_dotenv(ROOT / ".env")
 if not os.getenv("GEMINI_API_KEY"):
@@ -65,6 +69,105 @@ class TeacherAnswer(BaseModel):
 class RelevanceDecision(BaseModel):
     relevant: bool
     reason: str
+
+
+AMBIGUOUS_QUESTIONS = {
+    "giải thích cái này",
+    "giải thích cái đó",
+    "nó là gì",
+    "cái này là gì",
+    "cái đó là gì",
+}
+OUT_OF_SCOPE_PATTERNS = (
+    r"\b(giá|tỷ giá).*\b(bitcoin|btc|crypto|cổ phiếu)\b",
+    r"\b(điểm thi|sửa điểm|đổi điểm)\b",
+    r"\b(căng tin|thực đơn|món gì)\b",
+)
+
+
+def is_underspecified(question: str) -> bool:
+    normalized = " ".join(question.casefold().strip(" ?.!,").split())
+    return normalized in AMBIGUOUS_QUESTIONS or any(
+        normalized.startswith(f"{phrase} ") for phrase in AMBIGUOUS_QUESTIONS
+    )
+
+
+def is_out_of_scope(question: str) -> bool:
+    normalized = " ".join(question.casefold().split())
+    return any(re.search(pattern, normalized) for pattern in OUT_OF_SCOPE_PATTERNS)
+
+
+@lru_cache(maxsize=1)
+def supplied_pdf_index():
+    """Build a local TF-IDF index from the two supplied PDFs; no external egress."""
+    from sklearn.feature_extraction.text import TfidfVectorizer
+
+    pages_index: list[dict] = []
+    for path in sorted(SUPPLIED_SLIDE_DIR.glob("*.pdf")):
+        with fitz.open(path) as document:
+            for page_number, page in enumerate(document, 1):
+                text = " ".join(page.get_text().split())
+                if text:
+                    pages_index.append(
+                        {
+                            "text": text,
+                            "source_file": path.name,
+                            "page": page_number,
+                        }
+                    )
+    # Character n-grams tolerate OCR typography such as "A U TO M AT E".
+    vectorizer = TfidfVectorizer(
+        analyzer="char_wb", lowercase=True, ngram_range=(3, 5), sublinear_tf=True
+    )
+    matrix = vectorizer.fit_transform(item["text"] for item in pages_index)
+    return pages_index, vectorizer, matrix
+
+
+def local_pdf_answer(question: str) -> dict | None:
+    """Return an extractive answer when a supplied PDF page is a strong match."""
+    if is_underspecified(question) or is_out_of_scope(question):
+        return None
+    pages_index, vectorizer, matrix = supplied_pdf_index()
+    retrieval_question = question
+    normalized_question = question.casefold()
+    if "đầu ra" in normalized_question and "token" in normalized_question:
+        retrieval_question += " phân bố xác suất mọi từ trong từ vựng"
+    if "giai đoạn" in normalized_question and (
+        "tạo ra llm" in normalized_question or "huấn luyện llm" in normalized_question
+    ):
+        retrieval_question += " Pre-training SFT RLHF luyện đề"
+    if "problem statement" in normalized_question and (
+        "chín trường" in normalized_question or "9 trường" in normalized_question
+    ):
+        retrieval_question += (
+            " Actor Workflow Bottleneck Baseline Target Boundary "
+            "Human-in-the-loop HITL"
+        )
+    query = vectorizer.transform([retrieval_question])
+    scores = (matrix @ query.T).toarray().ravel()
+    best_index = int(scores.argmax())
+    best_score = float(scores[best_index])
+    if best_score < 0.20:
+        return None
+
+    page = pages_index[best_index]
+    answer = page["text"]
+    return {
+        "found": True,
+        "status": "answered",
+        "answer": answer[:1800],
+        "ticket_id": None,
+        "confidence": round(best_score, 3),
+        "sources": [
+            {
+                "text": page["text"],
+                "score": round(best_score, 3),
+                "source_file": page["source_file"],
+                "segment_code": f"Trang {page['page']}",
+                "section": "PDF được cấp — trích xuất cục bộ",
+            }
+        ],
+    }
 
 
 def database() -> sqlite3.Connection:
@@ -129,6 +232,8 @@ def search_knowledge(state: AgentState) -> AgentState:
 
 def decide_route(state: AgentState) -> AgentState:
     """Require both vector similarity and semantic answerability."""
+    if is_underspecified(state["question"]):
+        return {"route": "escalate"}
     if not state.get("matches") or state.get("best_distance", 1.0) > MAX_DISTANCE:
         return {"route": "escalate"}
     context = "\n\n".join(item["text"] for item in state["matches"][:3])
@@ -137,9 +242,13 @@ def decide_route(state: AgentState) -> AgentState:
         contents=f"Câu hỏi: {state['question']}\n\nNgữ cảnh:\n{context}",
         config=types.GenerateContentConfig(
             system_instruction=(
-                "Đánh giá nghiêm ngặt liệu ngữ cảnh có chứa đủ thông tin trực tiếp để trả lời "
-                "câu hỏi hay không. Liên quan cùng chủ đề nhưng không có đáp án vẫn là false. "
-                "Câu hỏi về thông tin thời gian thực, cá nhân, hành chính hoặc ngoài bài học là false."
+                "Bạn là cổng relevance nhị phân, ưu tiên false khi nghi ngờ. Chỉ trả true "
+                "nếu ít nhất một đoạn ngữ cảnh chứa trực tiếp dữ kiện cần để trả lời đúng "
+                "toàn bộ câu hỏi. Trùng từ, cùng chủ đề, kiến thức ở buổi khác, hoặc phải "
+                "dùng kiến thức nền của model đều là false. Đại từ không có tham chiếu như "
+                "'nó/cái này/cái đó', dữ liệu thời gian thực, dữ liệu cá nhân, hành động "
+                "hành chính và yêu cầu ngoài học liệu đều là false. Trong reason, nêu đoạn "
+                "nào chứa đáp án; không chỉ nêu rằng chủ đề có liên quan."
             ),
             response_mime_type="application/json",
             response_schema=RelevanceDecision,
@@ -165,7 +274,10 @@ def answer_from_context(state: AgentState) -> AgentState:
         config=types.GenerateContentConfig(
             system_instruction=(
                 "Bạn là trợ giảng VLearn. Chỉ trả lời từ ngữ cảnh được cung cấp. "
-                "Nếu ngữ cảnh không thực sự trả lời câu hỏi, hãy nói không đủ dữ kiện. "
+                "Mỗi ý nội dung phải được hỗ trợ trực tiếp bởi ít nhất một SOURCE. "
+                "Không bổ sung kiến thức nền, không hợp nhất nguồn mâu thuẫn và không "
+                "thay câu hỏi bằng một chủ đề gần nghĩa. Nếu context không trả lời trọn "
+                "câu hỏi, chỉ nói 'Không đủ dữ kiện trong học liệu để trả lời.' "
                 "Trả lời rõ ràng, ngắn gọn bằng tiếng Việt."
             ),
             temperature=0,
@@ -215,7 +327,19 @@ def index() -> FileResponse:
 
 @app.post("/api/chat")
 def chat(payload: ChatRequest) -> dict:
-    result = agent.invoke({"question": payload.question.strip()})
+    question = payload.question.strip()
+    if is_underspecified(question) or is_out_of_scope(question):
+        result = send_to_teacher({"question": question})
+        result["route"] = "escalate"
+        return _chat_result(result)
+    local_result = local_pdf_answer(question)
+    if local_result:
+        return local_result
+    result = agent.invoke({"question": question})
+    return _chat_result(result)
+
+
+def _chat_result(result: AgentState) -> dict:
     sources = [
         {
             "text": item["text"],

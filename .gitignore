@@ -9,3 +9,4 @@ __pycache__/
 /data/ocr/
 /data/slides
 /data/uploads/
+*.sqlite3

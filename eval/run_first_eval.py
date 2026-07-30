@@ -11,6 +11,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 # Use TF-IDF so eval runs offline without downloading ST model
 os.environ.setdefault("VLEARN_EMBED", "tfidf")
@@ -144,7 +146,7 @@ def main() -> None:
             "sources": "; ".join(
                 f"{s.get('segment_code')}({s.get('score')})" for s in (retr.get("sources") or [])[:3]
             ),
-            "answer_preview": (gen.get("answer") or "")[:280].replace("\n", " "),
+            "answer_preview": (gen.get("answer") or "")[:280].replace("\n", " ").strip(),
         })
         mark = "PASS" if ok else "FAIL"
         print(f"Q{qid:02d} {mark}: {note}")
@@ -155,16 +157,16 @@ def main() -> None:
     out_csv = EVAL_DIR / "run-1-results.csv"
 
     with out_csv.open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()), lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
 
     lines = [
         "# Kết quả chạy thử lần 1 — VLearn Tutor RAG",
         "",
-        f"**Thời điểm:** {ts}  ",
-        f"**Kết quả:** **{passed}/{total}** câu đạt  ",
-        f"**Môi trường:** `dev_` branch · embed=`tfidf` · LLM=`extractive` (không API key)  ",
+        f"**Thời điểm:** {ts}",
+        f"**Kết quả:** **{passed}/{total}** câu đạt",
+        f"**Môi trường:** `dev_` branch · embed=`tfidf` · LLM=`extractive` (không API key)",
         f"**Bộ câu:** `eval/golden-set.md` (36 câu)",
         "",
         "## Tóm tắt",

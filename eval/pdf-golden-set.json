@@ -1,0 +1,28 @@
+[
+  {"id":"P01","pdf":"d1-slide-hackathon.pdf","page":3,"question":"AI, Machine Learning, Deep Learning, Generative AI và LLM nằm trong nhau như thế nào?","expected_status":"answered","keywords":["Machine Learning","Deep Learning"]},
+  {"id":"P02","pdf":"d1-slide-hackathon.pdf","page":4,"question":"Discriminative AI khác Generative AI ở đầu ra như thế nào?","expected_status":"answered","keywords":["nhãn","nội dung mới"]},
+  {"id":"P03","pdf":"d1-slide-hackathon.pdf","page":8,"question":"Vì sao Transformer năm 2017 là một bước ngoặt?","expected_status":"answered","keywords":["2017","Transformer"]},
+  {"id":"P04","pdf":"d1-slide-hackathon.pdf","page":11,"question":"Đầu ra của Transformer là gì trước khi chọn token tiếp theo?","expected_status":"answered","keywords":["xác suất"]},
+  {"id":"P05","pdf":"d1-slide-hackathon.pdf","page":12,"question":"Vòng lặp sinh văn bản predict, append, rerun hoạt động thế nào?","expected_status":"answered","keywords":["token"]},
+  {"id":"P06","pdf":"d1-slide-hackathon.pdf","page":13,"question":"Token là gì và tại sao model không đọc nguyên từng từ?","expected_status":"answered","keywords":["mảnh"]},
+  {"id":"P07","pdf":"d1-slide-hackathon.pdf","page":14,"question":"Context window được ví như bàn làm việc có hạn nghĩa là gì?","expected_status":"answered","keywords":["context"]},
+  {"id":"P08","pdf":"d1-slide-hackathon.pdf","page":15,"question":"Attention cho phép mỗi token làm gì với các token khác?","expected_status":"answered","keywords":["liên quan"]},
+  {"id":"P09","pdf":"d1-slide-hackathon.pdf","page":18,"question":"Bốn giai đoạn tạo ra LLM được trình bày trong slide là gì?","expected_status":"answered","keywords":["Pre-training","SFT"]},
+  {"id":"P10","pdf":"d1-slide-hackathon.pdf","page":20,"question":"Ba giới hạn được nêu gồm bong bóng thời gian, nói chắc như đúng rồi và điều gì nữa?","expected_status":"answered","keywords":["bàn làm việc"]},
+  {"id":"P11","pdf":"d1-slide-hackathon.pdf","page":23,"question":"Bốn mức độ từ LLM trần đến hệ agent được mô tả thế nào?","expected_status":"answered","keywords":["tools"]},
+  {"id":"P12","pdf":"d1-slide-hackathon.pdf","page":24,"question":"Năm bộ phận trong vòng lặp agent là gì?","expected_status":"answered","keywords":["Goal","Tools","Memory"]},
+  {"id":"P13","pdf":"d1-slide-hackathon.pdf","page":27,"question":"Vì sao output token thường đắt hơn input token?","expected_status":"answered","keywords":["từng mảnh"]},
+  {"id":"P14","pdf":"d1-slide-hackathon.pdf","page":28,"question":"Bốn lớp xếp chồng trong giải phẫu một prompt là gì?","expected_status":"answered","keywords":["System","User"]},
+  {"id":"P15","pdf":"d1-slide-hackathon.pdf","page":29,"question":"Temperature và top_p điều khiển việc chọn token như thế nào?","expected_status":"answered","keywords":["temperature","top_p"]},
+
+  {"id":"P16","pdf":"d2-slide-hackathon.pdf","page":3,"question":"Double Diamond gồm bốn bước Discover, Define, Develop và Deliver như thế nào?","expected_status":"answered","keywords":["Discover","Define"]},
+  {"id":"P17","pdf":"d2-slide-hackathon.pdf","page":8,"question":"PAIR gợi ý reframing câu hỏi Can we use AI to... thành hai câu nào?","expected_status":"answered","keywords":["How might we","Can AI"]},
+  {"id":"P18","pdf":"d2-slide-hackathon.pdf","page":9,"question":"Problem Statement chín trường gồm các thành phần nào?","expected_status":"answered","keywords":["Actor","Workflow"]},
+  {"id":"P19","pdf":"d2-slide-hackathon.pdf","page":17,"question":"Khi nào nên Automate và khi nào nên Augment?","expected_status":"answered","keywords":["Automate","Augment"]},
+  {"id":"P20","pdf":"d2-slide-hackathon.pdf","page":18,"question":"Rule, Workflow và Agent khác nhau theo mức độ phức tạp ra sao?","expected_status":"answered","keywords":["Rule","Workflow","Agent"]},
+
+  {"id":"N01","pdf":null,"page":null,"question":"Giá Bitcoin hôm nay là bao nhiêu?","expected_status":"escalated","keywords":[]},
+  {"id":"N02","pdf":null,"page":null,"question":"Điểm thi cá nhân của tôi là bao nhiêu và hãy sửa điểm giúp tôi.","expected_status":"escalated","keywords":[]},
+  {"id":"N03","pdf":null,"page":null,"question":"Ngày mai căng tin có món gì?","expected_status":"escalated","keywords":[]},
+  {"id":"N04","pdf":null,"page":null,"question":"Giải thích cái này cho tôi.","expected_status":"escalated","keywords":[]}
+]

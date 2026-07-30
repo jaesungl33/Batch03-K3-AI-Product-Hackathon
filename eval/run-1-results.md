@@ -1,8 +1,8 @@
 # Kết quả chạy thử lần 1 — VLearn Tutor RAG
 
-**Thời điểm:** 2026-07-30 08:57 UTC  
-**Kết quả:** **27/36** câu đạt  
-**Môi trường:** `dev_` branch · embed=`tfidf` · LLM=`extractive` (không API key)  
+**Thời điểm:** 2026-07-30 10:09 UTC
+**Kết quả:** **36/36** câu đạt
+**Môi trường:** `dev_` branch · embed=`tfidf` · LLM=`extractive` (không API key)
 **Bộ câu:** `eval/golden-set.md` (36 câu)
 
 ## Tóm tắt
@@ -10,9 +10,9 @@
 | Metric | Giá trị |
 |---|---|
 | Tổng câu | 36 |
-| Pass | 27 |
-| Fail | 9 |
-| Tỷ lệ | 75.0% |
+| Pass | 36 |
+| Fail | 0 |
+| Tỷ lệ | 100.0% |
 
 ## Bảng chi tiết (cả câu fail)
 
@@ -34,16 +34,16 @@
 | Q14 | ✅ | True | Day 2 | Soi bài toán các nhóm · tự động hoá & rà | answered with grounding |
 | Q15 | ✅ | True | Chưa gắn buổi | Buổi về bài toán · đánh giá · dữ liệu | answered with grounding |
 | Q16 | ✅ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | answered with grounding |
-| Q17 | ❌ | True | Day 2 | Soi bài toán các nhóm · tự động hoá & rà | fabricated or over-answered |
-| Q18 | ❌ | True | Day 2 | Xác định bài toán kinh doanh cho AI | fabricated or over-answered |
-| Q19 | ❌ | True | Day 2 | Soi bài toán các nhóm · tự động hoá & rà | fabricated or over-answered |
-| Q20 | ❌ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | fabricated or over-answered |
-| Q21 | ❌ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | fabricated or over-answered |
+| Q17 | ✅ | False | - | - | declined/not found |
+| Q18 | ✅ | False | - | - | declined/not found |
+| Q19 | ✅ | False | - | - | declined/not found |
+| Q20 | ✅ | False | - | - | declined/not found |
+| Q21 | ✅ | False | - | - | declined/not found |
 | Q22 | ✅ | True | Day 2 | Xác định bài toán kinh doanh cho AI | located Day 2 — Xác định bài toán kinh doanh cho AI |
 | Q23 | ✅ | True | Day 2 | Soi bài toán các nhóm · tự động hoá & rà | located Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc |
 | Q24 | ✅ | True | Chưa gắn buổi | Buổi về bài toán · đánh giá · dữ liệu | located Chưa gắn buổi — Buổi về bài toán · đánh giá · dữ liệu |
-| Q25 | ❌ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | fabricated or over-answered |
-| Q26 | ❌ | True | Chưa gắn buổi | Buổi về bài toán · đánh giá · dữ liệu | fabricated or over-answered |
+| Q25 | ✅ | False | - | - | declined/not found |
+| Q26 | ✅ | False | - | - | declined/not found |
 | Q27 | ✅ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | answered with grounding |
 | Q28 | ✅ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | answered with grounding |
 | Q29 | ✅ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | answered with grounding |
@@ -52,8 +52,8 @@
 | Q32 | ✅ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | answered with grounding |
 | Q33 | ✅ | True | Day 1 | Foundation: cách LLM hoạt động (transfor | answered with grounding |
 | Q34 | ✅ | True | Chưa gắn buổi | Buổi Foundation: transformer & attention | answered with grounding |
-| Q35 | ❌ | True | Chưa gắn buổi | Buổi về bài toán · đánh giá · dữ liệu | fabricated or over-answered |
-| Q36 | ❌ | True | Day 2 | Soi bài toán các nhóm · tự động hoá & rà | fabricated or over-answered |
+| Q35 | ✅ | False | - | - | declined/not found |
+| Q36 | ✅ | False | - | - | declined/not found |
 
 ## Chi tiết từng câu
 
@@ -62,7 +62,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
-- **Sources:** T03-063(0.328); T03-142(0.298); T03-064(0.282)
+- **Sources:** T03-063(0.334); T03-142(0.295); T03-064(0.279)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Soi bài toán các nhóm · tự động hoá & ràng buộc". Trên lớp, giảng viên trình bày như sau: • **Giảng viên:** Thế em ngồi em đọc, kiểm tra trước rồi em làm đúng không? Ok, cũng là một ý tưởng táo bạo đấy. Còn bạn nào?  [T03-063] • Nãy mình
 
@@ -71,7 +71,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 1 — Foundation: cách LLM hoạt động (transformer, attention, agent)
-- **Sources:** T04-036(0.764); T04-035(0.234); T04-018(0.191)
+- **Sources:** T04-036(0.777); T04-035(0.239); T04-018(0.181)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 1 — chủ đề "Foundation: cách LLM hoạt động (transformer, attention, agent)". Trên lớp, giảng viên trình bày như sau: • Vấn đề ở đây: cờ vây là một bộ môn có cực kỳ nhiều tổ hợp có thể xảy ra trên bàn cờ. Thực ra các chuyên gia chơi cờ vây phải qua r
 
@@ -80,7 +80,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-059(0.336); T06-075(0.319); T05-104(0.253)
+- **Sources:** T06-059(0.337); T06-075(0.315); T06-083(0.26)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Thế thì ý mình nói rằng là cái lịch sử thì nó đi rất là dài, nhưng trong lịch sử này có mấy cái điểm nhấn. Khoảng năm 1970 cho đến năm 1990 được
 
@@ -89,7 +89,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-086(0.674); T06-161(0.432); T06-075(0.32)
+- **Sources:** T06-086(0.628); T06-161(0.458); T06-075(0.328)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Cái self-attention bản chất là mỗi một token sẽ nhìn các token khác trong ngữ cảnh đang đặt ra. Thứ hai là multi-head attention: sẽ có nhiều góc
 
@@ -98,7 +98,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi về bài toán · đánh giá · dữ liệu
-- **Sources:** T06-025(0.576); T05-080(0.356); T05-056(0.335)
+- **Sources:** T06-025(0.584); T05-080(0.344); T05-056(0.332)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi về bài toán · đánh giá · dữ liệu". Trên lớp, giảng viên trình bày như sau: • Có đúng không? Vì sao?  [T06-025] • Ví dụ nhá. Theo các bạn, cái việc công ty SpaceX — tất cả các bạn đều biết đúng không — quyết định đưa con ngườ
 
@@ -107,7 +107,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-023(0.315); T06-049(0.235); T05-047(0.228)
+- **Sources:** T06-023(0.323); T05-047(0.237); T06-049(0.212)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Đầu tiên, nếu các bạn được yêu cầu khoanh vùng AI là gì — bây giờ mình hỏi: giả sử cái máy tính Casio, cái máy tính học sinh hay dùng để làm toá
 
@@ -116,7 +116,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-149(0.559); T06-150(0.489); T06-157(0.296)
+- **Sources:** T06-149(0.558); T06-150(0.501); T06-157(0.305)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Giới hạn thứ hai là hallucination — nói rồi. Cái thứ ba là context window: mô hình chỉ nhìn được một lượng nhất định, và đây cũng là cái thách t
 
@@ -125,7 +125,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Xác định bài toán kinh doanh cho AI
-- **Sources:** T01-045(0.557); T01-058(0.503); T01-004(0.385)
+- **Sources:** T01-045(0.576); T01-058(0.509); T01-004(0.375)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Xác định bài toán kinh doanh cho AI". Trên lớp, giảng viên trình bày như sau: • Rồi, ông Don Norman — tác giả cuốn The Design of Everyday Things — có một câu rất nổi tiếng: "Do not solve the problem I'm asked to solve." Tức là tôi sẽ khô
 
@@ -134,16 +134,16 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Xác định bài toán kinh doanh cho AI
-- **Sources:** T01-003(0.601); T02-018(0.37); T01-001(0.334)
+- **Sources:** T01-003(0.549); T02-018(0.382); T01-001(0.35)
 - **Đánh giá:** answered with grounding
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Xác định bài toán kinh doanh cho AI". Trên lớp, giảng viên trình bày như sau: • Thực tế có những nghiên cứu, những thống kê trên thế giới nói rằng việc đưa AI vào ứng dụng, đặc biệt trong doanh nghiệp, thì 70% của nó đến từ con người và 
+- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Xác định bài toán kinh doanh cho AI". Trên lớp, giảng viên trình bày như sau: • Thực tế có những nghiên cứu, những thống kê trên thế giới nói rằng việc đưa AI vào ứng dụng, đặc biệt trong doanh nghiệp, thì 70% của nó đến từ con người và
 
 ### Q10 — PASS
 - **Đưa vào:** Product manager khác project manager thế nào?
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Xác định bài toán kinh doanh cho AI
-- **Sources:** T01-008(0.678); T01-011(0.587); T01-009(0.42)
+- **Sources:** T01-008(0.668); T01-011(0.586); T01-009(0.427)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Xác định bài toán kinh doanh cho AI". Trên lớp, giảng viên trình bày như sau: • Bây giờ trong một team có bạn product owner, product manager. PM ở đây mình nói P là product nhá, không phải project — nó khác nhau. Có ai định nghĩa được nó
 
@@ -152,7 +152,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Chỉ số thành công & mức tự động hoá (phần sau buổi)
-- **Sources:** T02-010(0.69); T03-068(0.242); T03-069(0.221)
+- **Sources:** T02-010(0.684); T03-068(0.243); T01-079(0.226)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Chỉ số thành công & mức tự động hoá (phần sau buổi)". Trên lớp, giảng viên trình bày như sau: • Bài tập ngắn này để mọi người thử việc phân loại, tìm ra cái việc đáng để làm trước. Sau đấy thực ra mình sẽ còn rất nhiều vấn đề khác nữa, n
 
@@ -161,7 +161,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Chỉ số thành công & mức tự động hoá (phần sau buổi)
-- **Sources:** T02-032(0.771); T02-034(0.517); T02-033(0.36)
+- **Sources:** T02-032(0.771); T02-034(0.505); T02-033(0.37)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Chỉ số thành công & mức tự động hoá (phần sau buổi)". Trên lớp, giảng viên trình bày như sau: • Bước thứ hai là chọn mức độ tự động hoá. Ở đây có hai thang: automation hay augmentation. Automation nghĩa là tự động, augmentation là tăng c
 
@@ -170,16 +170,16 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Chỉ số thành công & mức tự động hoá (phần sau buổi)
-- **Sources:** T02-035(0.642); T02-014(0.333); T02-036(0.326)
+- **Sources:** T02-035(0.658); T02-014(0.332); T02-036(0.324)
 - **Đánh giá:** answered with grounding
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Chỉ số thành công & mức tự động hoá (phần sau buổi)". Trên lớp, giảng viên trình bày như sau: • Còn một thang nữa: khi AI tham gia vào rồi, đánh giá mức độ của AI — của công nghệ nói chung — thì còn có các mức độ liên quan đến kỹ thuật. 
+- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Chỉ số thành công & mức tự động hoá (phần sau buổi)". Trên lớp, giảng viên trình bày như sau: • Còn một thang nữa: khi AI tham gia vào rồi, đánh giá mức độ của AI — của công nghệ nói chung — thì còn có các mức độ liên quan đến kỹ thuật.
 
 ### Q14 — PASS
 - **Đưa vào:** Khi nào nên chọn RAG thay vì fine-tuning?
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
-- **Sources:** T03-119(0.617); T03-036(0.27); T02-041(0.241)
+- **Sources:** T03-119(0.616); T03-036(0.263); T02-041(0.249)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Soi bài toán các nhóm · tự động hoá & ràng buộc". Trên lớp, giảng viên trình bày như sau: • Cũng là kinh nghiệm cho các bạn: các bạn cũng đừng quá [không nghe rõ] cái kỹ thuật gọi là fine-tuning nhá. Tại vì để sử dụng được kỹ thuật fine-
 
@@ -188,7 +188,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi về bài toán · đánh giá · dữ liệu
-- **Sources:** T05-130(0.436); T05-133(0.306); T05-126(0.291)
+- **Sources:** T05-130(0.422); T05-124(0.306); T05-126(0.306)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi về bài toán · đánh giá · dữ liệu". Trên lớp, giảng viên trình bày như sau: • [Khách mời]: Bây giờ nó đang hot, nhưng không chỉ hot kiểu ngày xưa — ngày xưa hot theo kiểu hype, nghĩa là có thể nó fail. Bây giờ nếu nhìn thấy c
 
@@ -197,61 +197,61 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-141(0.468); T06-143(0.438); T06-043(0.261)
+- **Sources:** T06-141(0.535); T06-143(0.438); T06-139(0.256)
 - **Đánh giá:** answered with grounding
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Nói một chút nữa là cái LLM được tạo ra như thế nào. Đầu tiên là giai đoạn training: nó đọc hết tất cả các ngôn ngữ và kiến thức trên thế giới. 
+- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Nói một chút nữa là cái LLM được tạo ra như thế nào. Đầu tiên là giai đoạn training: nó đọc hết tất cả các ngôn ngữ và kiến thức trên thế giới.
 
-### Q17 — FAIL
+### Q17 — PASS
 - **Đưa vào:** Công thức nấu phở bò Hà Nội chuẩn là gì?
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
-- **Sources:** T01-014(0.534); T03-071(0.297); T03-078(0.209)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Soi bài toán các nhóm · tự động hoá & ràng buộc". Trên lớp, giảng viên trình bày như sau: • Nếu ngay trong Việt Nam thôi thì văn hoá làm product mình thấy trong Sài Gòn tốt hơn ở Hà Nội. Mọi người để ý mà xem, các công ty công nghệ lớn đ
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
-### Q18 — FAIL
+### Q18 — PASS
 - **Đưa vào:** Giá Bitcoin hôm nay bao nhiêu?
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Day 2 — Xác định bài toán kinh doanh cho AI
-- **Sources:** T02-018(0.443); T01-078(0.375); T01-022(0.37)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Xác định bài toán kinh doanh cho AI". Trên lớp, giảng viên trình bày như sau: • Và cái quan trọng nhất — việc này nãy các bạn cũng vừa làm thử — là chúng ta phải định lượng được bài toán đấy. Bởi vì cái này mới giúp chúng ta đánh giá đượ
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
-### Q19 — FAIL
+### Q19 — PASS
 - **Đưa vào:** Trong khoá học, giảng viên dạy cách deploy Kubernetes cluster production thế nào?
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
-- **Sources:** T03-053(0.347); T03-039(0.262); T03-061(0.261)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Soi bài toán các nhóm · tự động hoá & ràng buộc". Trên lớp, giảng viên trình bày như sau: • **Giảng viên:** Thế nó có được quyền sáng tác thêm cách giải không?  [T03-053] • Tại vì trong khoá học này các bạn cũng sẽ được chia nhóm vào buổ
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
-### Q20 — FAIL
+### Q20 — PASS
 - **Đưa vào:** nó là gì?
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T05-144(0.387); T06-104(0.312); T05-010(0.287)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Mình nhấn mạnh lại, với trải nghiệm cá nhân của mình: bất kể công việc của bạn là gì, bất kể sau này bạn là gì, thì bạn bắt buộc phải rất tốt tr
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
-### Q21 — FAIL
+### Q21 — PASS
 - **Đưa vào:** Viết giúp mình email xin nghỉ việc gửi sếp.
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-009(0.304); T06-102(0.261); T06-010(0.241)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • [học viên]: Vị trí gần nhất em làm là IT manager. Ở bên đấy thì hiện tại em đã nghỉ rồi, mới nghỉ để đi học khóa này.  [T06-009] • [Học viên]: E
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
 ### Q22 — PASS
 - **Đưa vào:** Ma trận impact-effort dùng để làm gì?
 - **Kỳ vọng:** locate
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Xác định bài toán kinh doanh cho AI
-- **Sources:** T01-079(0.526); T01-088(0.463); T01-074(0.343)
+- **Sources:** T01-079(0.539); T01-088(0.465); T01-074(0.34)
 - **Đánh giá:** located Day 2 — Xác định bài toán kinh doanh cho AI
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Xác định bài toán kinh doanh cho AI". Trên lớp, giảng viên trình bày như sau: • Để các bạn có thể hình dung thêm nhá, nó sẽ kiểu như này: các bạn có thể vẽ một cái bảng — trục ngang, trục dọc — sau đấy để hết nó lên và sắp xếp vào các cu
 
@@ -260,7 +260,7 @@
 - **Kỳ vọng:** locate
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
-- **Sources:** T03-131(0.435); T03-132(0.325); T02-037(0.245)
+- **Sources:** T03-131(0.434); T03-132(0.326); T02-037(0.25)
 - **Đánh giá:** located Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Soi bài toán các nhóm · tự động hoá & ràng buộc". Trên lớp, giảng viên trình bày như sau: • Đây là vài cái workflow pattern — dĩ nhiên trên thế giới cũng có nhiều — nói chung là những cái basic, các bạn có thể xem như những khối Lego blo
 
@@ -269,43 +269,43 @@
 - **Kỳ vọng:** locate
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi về bài toán · đánh giá · dữ liệu
-- **Sources:** T05-113(0.449); T05-109(0.316); T05-074(0.297)
+- **Sources:** T05-113(0.451); T05-109(0.313); T05-149(0.293)
 - **Đánh giá:** located Chưa gắn buổi — Buổi về bài toán · đánh giá · dữ liệu
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi về bài toán · đánh giá · dữ liệu". Trên lớp, giảng viên trình bày như sau: • Hôm nay chúng ta nói đến planning phức tạp — lập kế hoạch để tạo ra personalize cho khách du lịch chẳng hạn — đấy là việc nhiều bước. Rồi chúng ta 
+- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi về bài toán · đánh giá · dữ liệu". Trên lớp, giảng viên trình bày như sau: • Hôm nay chúng ta nói đến planning phức tạp — lập kế hoạch để tạo ra personalize cho khách du lịch chẳng hạn — đấy là việc nhiều bước. Rồi chúng ta
 
-### Q25 — FAIL
+### Q25 — PASS
 - **Đưa vào:** Buổi trước thầy nói cái đó là gì?
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-119(0.414); T06-104(0.32); T05-007(0.271)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Slide thì thầy dùng cái bản basic thôi. Sau đó thầy sẽ có một bản doc để cho các bạn tự đọc. Thế là giải quyết số một là slide nhá: thầy dùng bả
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
-### Q26 — FAIL
+### Q26 — PASS
 - **Đưa vào:** Chấm và sửa giúp mình đoạn code Python này để nộp bài.
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Chưa gắn buổi — Buổi về bài toán · đánh giá · dữ liệu
-- **Sources:** T06-090(0.321); T05-009(0.317); T05-147(0.274)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi về bài toán · đánh giá · dữ liệu". Trên lớp, giảng viên trình bày như sau: • Code thì 4 năm rồi để AI code. Còn mình vẫn làm trong ngạch, vẫn xây dựng hệ thống, vẫn làm sản phẩm — tức là giờ không code, để cho AI code thôi, 
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
 ### Q27 — PASS
 - **Đưa vào:** chào bạn, mình chưa hiểu về RAG
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-005(0.289); T05-065(0.287); T06-077(0.245)
+- **Sources:** T06-005(0.289); T05-065(0.28); T06-077(0.249)
 - **Đánh giá:** answered with grounding
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • [học viên]: Vâng, chào thầy. Em đi làm đến năm nay là 18 năm.  [T06-005] • Nhân chuyện này thì mình muốn nhắc các bạn một thói quen các bạn nên 
+- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • [học viên]: Vâng, chào thầy. Em đi làm đến năm nay là 18 năm.  [T06-005] • Nhân chuyện này thì mình muốn nhắc các bạn một thói quen các bạn nên
 
 ### Q28 — PASS
 - **Đưa vào:** giải thích kỹ cơ chế transformer
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-137(0.324); T06-075(0.322); T06-022(0.311)
+- **Sources:** T06-137(0.32); T06-075(0.317); T06-022(0.304)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Một cái rất quan trọng nữa là cơ chế autoregressive: output token sẽ trở thành input token — cái feed forward mình vừa nói. Sau khi nó đoán ra t
 
@@ -314,7 +314,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-161(0.414); T06-137(0.398); T06-022(0.334)
+- **Sources:** T06-161(0.418); T06-137(0.401); T06-022(0.329)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Để access vào bài lab này, mọi người vào cái slide mình đã gửi trong channel welcome-and-rules; ở slide thứ sáu mọi người sẽ thấy "live demo sel
 
@@ -323,7 +323,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Chỉ số thành công & mức tự động hoá (phần sau buổi)
-- **Sources:** T02-038(0.628); T03-134(0.356); T03-034(0.294)
+- **Sources:** T02-038(0.636); T03-134(0.363); T03-034(0.288)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Chỉ số thành công & mức tự động hoá (phần sau buổi)". Trên lớp, giảng viên trình bày như sau: • Phía dưới thì bạn sẽ cần những cái phức tạp hơn — ví dụ xây dựng hẳn một đội agent, sub-agent để làm việc với nhau: có một agent chia việc, s
 
@@ -332,7 +332,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
-- **Sources:** T03-134(0.483); T02-038(0.456); T01-030(0.236)
+- **Sources:** T03-134(0.49); T02-038(0.473); T01-030(0.234)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Soi bài toán các nhóm · tự động hoá & ràng buộc". Trên lớp, giảng viên trình bày như sau: • Mấy cái này các bạn có thể về bảo con AI, hay tìm cái video giải thích thì nó cũng dễ hiểu hơn — nó cũng không có gì khác đâu. Loanh quanh vẫn ch
 
@@ -341,7 +341,7 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-015(0.565); T06-016(0.537); T06-011(0.407)
+- **Sources:** T06-015(0.563); T06-016(0.541); T06-011(0.419)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • [học viên]: Chào thầy và các bạn. Về việc vibe code thì nó có thể đúng với những sản phẩm dùng cho cá nhân. Còn về một sản phẩm dùng cho một lượ
 
@@ -350,33 +350,33 @@
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Day 1 — Foundation: cách LLM hoạt động (transformer, attention, agent)
-- **Sources:** T04-095(0.587); T04-072(0.375); T04-094(0.374)
+- **Sources:** T04-095(0.615); T04-094(0.383); T04-072(0.37)
 - **Đánh giá:** answered with grounding
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 1 — chủ đề "Foundation: cách LLM hoạt động (transformer, attention, agent)". Trên lớp, giảng viên trình bày như sau: • Các đáp án được giải thích trong quiz:  [T04-095] • Temperature hoạt động theo kiểu: nếu temperature bằng 0, mô hình sẽ luôn luôn 
+- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 1 — chủ đề "Foundation: cách LLM hoạt động (transformer, attention, agent)". Trên lớp, giảng viên trình bày như sau: • Các đáp án được giải thích trong quiz:  [T04-095] • Trong phần quiz, một [học viên] đang top 1 được mời giới thiệu và giải thích v
 
 ### Q34 — PASS
 - **Đưa vào:** "Context" là gì
 - **Kỳ vọng:** answer
 - **Found:** True · **Mode:** extractive
 - **Locate:** Chưa gắn buổi — Buổi Foundation: transformer & attention
-- **Sources:** T06-150(0.327); T05-144(0.326); T06-149(0.313)
+- **Sources:** T06-150(0.338); T05-144(0.316); T06-149(0.313)
 - **Đánh giá:** answered with grounding
 - **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi Foundation: transformer & attention". Trên lớp, giảng viên trình bày như sau: • Các mô hình, ví dụ bên [không nghe rõ], người ta tiếp cận theo hướng context window của nó 512K thôi; còn bên Google thì lên 1 triệu, thậm chí b
 
-### Q35 — FAIL
+### Q35 — PASS
 - **Đưa vào:** xem bài tập thực hành lab day 2 chiều nay ở đaau
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Chưa gắn buổi — Buổi về bài toán · đánh giá · dữ liệu
-- **Sources:** T05-009(0.439); T05-002(0.319); T05-140(0.307)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Chưa gắn buổi — chủ đề "Buổi về bài toán · đánh giá · dữ liệu". Trên lớp, giảng viên trình bày như sau: • Nội dung bài học chiều nay, nói lại, là chúng ta sẽ đi qua bảy phần như vậy. Khi nào các bạn thấy nó boring quá thì các bạn kêu nhé. Mình còn có cá
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.
 
-### Q36 — FAIL
+### Q36 — PASS
 - **Đưa vào:** điêu toa
 - **Kỳ vọng:** decline
-- **Found:** True · **Mode:** extractive
-- **Locate:** Day 2 — Soi bài toán các nhóm · tự động hoá & ràng buộc
-- **Sources:** T01-033(0.0); T01-036(0.0); T01-073(0.0)
-- **Đánh giá:** fabricated or over-answered
-- **Trả lời (rút gọn):** Kiến thức này được giảng ở Day 2 — chủ đề "Soi bài toán các nhóm · tự động hoá & ràng buộc". Trên lớp, giảng viên trình bày như sau: • Có những việc, ví dụ như có những bài toán mỗi tuần sẽ phải làm cái report một lần. Hỏi: làm một tuần một lần, mất bao lâu để làm việc đấy? Các b
+- **Found:** False · **Mode:** none
+- **Locate:** None — None
+- **Sources:** (none)
+- **Đánh giá:** declined/not found
+- **Trả lời (rút gọn):** Mình chưa tìm thấy kiến thức này trong học liệu đã nạp.

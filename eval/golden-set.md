@@ -215,6 +215,6 @@ Mỗi kiểu **≥ 2 câu** trong bộ. Tick khi đủ:
 
 **Trả lời mục spec §7:** Số câu bắt nguồn từ quan sát thực tế = **10** (≥ 5 tối thiểu, ≥ 10 khuyến nghị).
 
-**Lần chạy thử đầu (CP3):** **27/36** — chi tiết `eval/run-1-results.md` + `eval/run-1-results.csv`
+**Lượt chạy đầy đủ sau sửa guardrail:** **36/36 (100%)** — chi tiết `eval/run-1-results.md` + `eval/run-1-results.csv`
 
 Khi chấm tự động, ít nhất kiểm: (1) `found` đúng kỳ vọng, (2) có/không có mã đoạn `[Txx-NNN]` bắt buộc, (3) câu trả lời không chứa thông tin bịa cho nhóm câu âm tính.
