@@ -1,4 +1,4 @@
-﻿<!doctype html><html lang="vi"><head>
+<!doctype html><html lang="vi"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VLearn Tutor — RAG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -135,12 +135,7 @@
   .tp.theory{color:var(--navy);background:#eaf0fb}.tp.lab{color:var(--green);background:var(--green-soft)}
   .banner{background:var(--red-soft);color:var(--red);font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:10px;margin-bottom:14px;display:none}
   .banner.show{display:block}
-  .question-list{display:flex;flex-direction:column;gap:12px;padding:16px}
-  .question-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fafbfe}
-  .question-card .qid{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:5px}
-  .question-card .qtext{font-size:14px;color:var(--navy);font-weight:600;margin-bottom:10px}
-  .question-card textarea{width:100%;min-height:82px;resize:vertical;border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit;font-size:13px}
-  .question-card button{margin-top:8px;border:0;background:var(--red);color:#fff;border-radius:9px;padding:9px 13px;font-weight:700;cursor:pointer}</style></head><body>
+</style></head><body>
 
 <!-- LANDING -->
 <div id="landing" class="screen show">
@@ -154,7 +149,7 @@
       <div class="rolecard stu" onclick="go('student')"><div class="ic">🎓</div><h3>Học viên</h3>
         <p>Hỏi bất kỳ kiến thức nào — trợ lý tìm đúng buổi học, tóm tắt bài giảng và mở nguồn chi tiết khi cần.</p>
         <div class="go">Vào không gian học tập →</div></div>
-      <div class="rolecard coach" onclick="go('coach')"><div class="ic">🧑‍🏫</div><h3>Giảng viên</h3>
+      <div class="rolecard coach" onclick="go('coach')"><div class="ic">🧑‍🏫</div><h3>Lab Coach</h3>
         <p>Nạp học liệu theo buổi, hệ thống embed vào cơ sở tri thức để học viên tra cứu.</p>
         <div class="go">Vào bảng điều khiển →</div></div>
     </div>
@@ -194,26 +189,22 @@
 <!-- COACH -->
 <div id="coach" class="screen">
   <div class="brandnav"><div class="logo"><span class="mark"></span>V<b>Learn</b></div>
-    <span class="rolebadge coach">🧑‍🏫 Giảng viên</span>
+    <span class="rolebadge coach">🧑‍🏫 Lab Coach</span>
     <div class="right"><span class="pill-user"><span class="av">LC</span>Coach workspace</span>
       <button class="switchrole" onclick="go('landing')">Đổi vai trò</button></div></div>
   <div class="coach-scroll"><div class="coach-inner">
     <div class="eyebrow">VLearn · Quản lý học liệu</div>
     <h1>Nạp & embed học liệu</h1>
-    <p class="sub">Chọn một tài liệu PDF. Hệ thống sẽ OCR từng trang bằng Gemini, tạo embedding và nạp trực tiếp vào ChromaDB để học viên tra cứu.</p>
-    <div class="panel" style="margin-bottom:20px">
-      <div class="panel-head"><span class="h">Câu hỏi chờ giảng viên</span><span class="tag" id="pendingTag">0 câu</span></div>
-      <div class="question-list" id="questionList"><div style="color:var(--muted)">Đang tải...</div></div>
-    </div>
+    <p class="sub">Bấm "Nạp & Embed" để (re)build cơ sở tri thức từ transcript trong thư mục <code>data/transcript</code>. Mỗi đoạn được gắn nhãn buổi/chủ đề rồi đưa vào ChromaDB.</p>
     <div class="coach-grid">
       <div class="panel">
         <div class="panel-head"><span class="h">⬆️ Nạp học liệu</span><span class="tag">LAB COACH</span></div>
         <div class="form-pad">
           <div class="field"><label>Nguồn học liệu</label>
-            <select disabled><option>PDF do giảng viên tải lên</option></select></div>
-          <div class="field"><label>Loại</label><select disabled><option>Slide / tài liệu bài giảng</option></select></div>
-          <div class="field"><label>File PDF (tối đa 25 MB)</label>
-            <div class="drop"><div class="ic">📄</div><input id="pdfFile" type="file" accept="application/pdf,.pdf"></div></div>
+            <select><option>data/transcript/ — 6 transcript bài giảng</option></select></div>
+          <div class="field"><label>Loại</label><select><option>Lý thuyết (theory)</option></select></div>
+          <div class="field"><label>File</label>
+            <div class="drop"><div class="ic">📄</div><div><b>6 file transcript</b> đã có sẵn trong data pack</div></div></div>
           <button class="submit" id="ingestBtn" onclick="runIngest()">Nạp & Embed vào hệ thống</button>
         </div>
       </div>
@@ -221,10 +212,10 @@
         <div class="panel">
           <div class="panel-head"><span class="h">⚙️ Ingestion pipeline</span><span class="tag" id="ingestState">CHỜ NẠP</span></div>
           <div class="ingest-log" id="ingestLog">
-            <div class="ilog-step"><div class="n">1</div><div><div class="tt">OCR tài liệu PDF</div><div class="dd">Render và đọc nội dung theo từng trang bằng Gemini</div></div><div class="badge"></div></div>
-            <div class="ilog-step"><div class="n">2</div><div><div class="tt">Chia đoạn & metadata</div><div class="dd">filename · page · chunk_index · source_type</div></div><div class="badge"></div></div>
+            <div class="ilog-step"><div class="n">1</div><div><div class="tt">Parse transcript</div><div class="dd">Tách theo mã đoạn [Txx-NNN]</div></div><div class="badge"></div></div>
+            <div class="ilog-step"><div class="n">2</div><div><div class="tt">Gắn metadata</div><div class="dd">day · topic · section · type · segment_code</div></div><div class="badge"></div></div>
             <div class="ilog-step"><div class="n">3</div><div><div class="tt">Embed</div><div class="dd">Vector hoá từng đoạn</div></div><div class="badge"></div></div>
-            <div class="ilog-step"><div class="n">4</div><div><div class="tt">Lưu ChromaDB</div><div class="dd">Collection: slides_ocr</div></div><div class="badge"></div></div>
+            <div class="ilog-step"><div class="n">4</div><div><div class="tt">Lưu ChromaDB</div><div class="dd">Collection: vlearn_lectures</div></div><div class="badge"></div></div>
           </div>
         </div>
         <div class="panel">
@@ -242,7 +233,7 @@ const API=location.origin;
 function go(s){document.querySelectorAll('.screen').forEach(el=>el.classList.remove('show'));
   document.getElementById(s).classList.add('show');
   if(s!=='student')closeSlide();
-  if(s==='coach'){loadInventory();loadQuestions();}}
+  if(s==='coach')loadInventory();}
 
 /* ---------- student chat ---------- */
 const inner=document.getElementById('chatinner');
@@ -336,29 +327,6 @@ function showLab(lab){
 }
 
 /* ---------- coach ---------- */
-async function loadQuestions(){
-  const box=document.getElementById('questionList');
-  try{
-    const rows=await fetch(API+'/api/questions?status=pending').then(r=>r.json());
-    document.getElementById('pendingTag').textContent=rows.length+' câu';
-    box.innerHTML=rows.length?rows.map(q=>`<div class="question-card">
-      <div class="qid">Mã ${esc(q.id)} · ${esc(q.created_at)}</div>
-      <div class="qtext">${esc(q.question)}</div>
-      <textarea id="answer-${esc(q.id)}" placeholder="Nhập câu trả lời đã xác nhận..."></textarea>
-      <button onclick="submitTeacherAnswer('${esc(q.id)}')">Trả lời & lưu vào kho tri thức</button>
-    </div>`).join(''):'<div style="color:var(--muted);text-align:center">Không có câu hỏi đang chờ.</div>';
-  }catch(e){box.innerHTML='<div style="color:var(--red)">Không tải được hàng đợi câu hỏi.</div>';}
-}
-async function submitTeacherAnswer(id){
-  const input=document.getElementById('answer-'+id), answer=input.value.trim();
-  if(!answer)return;
-  input.disabled=true;
-  const response=await fetch(API+'/api/questions/'+id+'/answer',{
-    method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({answer})
-  });
-  if(!response.ok){input.disabled=false;alert('Không thể lưu câu trả lời');return;}
-  await loadQuestions();await loadInventory();
-}
 async function loadInventory(){
   try{
     const d=await fetch(API+'/api/inventory').then(r=>r.json());
@@ -369,30 +337,22 @@ async function loadInventory(){
   }catch(e){document.getElementById('matsBody').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--red)">Lỗi kết nối server</td></tr>';}
 }
 async function runIngest(){
-  const btn=document.getElementById('ingestBtn'), input=document.getElementById('pdfFile');
-  if(btn.disabled)return;
-  const file=input.files[0];
-  if(!file){alert('Vui lòng chọn một file PDF.');return;}
-  if(file.type!=='application/pdf' && !file.name.toLowerCase().endsWith('.pdf')){alert('Chỉ hỗ trợ file PDF.');return;}
-  btn.disabled=true;btn.textContent='Đang OCR & embedding…';
+  const btn=document.getElementById('ingestBtn'); if(btn.disabled)return;
+  btn.disabled=true;btn.textContent='Đang xử lý…';
   document.getElementById('ingestState').textContent='ĐANG CHẠY';
   const steps=document.querySelectorAll('#ingestLog .ilog-step');
   steps.forEach(s=>{s.classList.remove('active','done');s.querySelector('.badge').textContent='';});
-  const form=new FormData();form.append('file',file);
-  const callP=fetch(API+'/api/ingest',{method:'POST',body:form}).then(async r=>({ok:r.ok,data:await r.json()}));
-  for(let i=0;i<steps.length;i++){steps[i].classList.add('active');await wait(600);steps[i].classList.remove('active');steps[i].classList.add('done');}
-  let result;try{result=await callP;}catch(e){result=null;}
-  if(result&&result.ok){
-    const res=result.data, badges=[res.pages+' trang',res.chunks+' đoạn',res.backend,'store: '+res.count_in_store];
+  const callP=fetch(API+'/api/ingest',{method:'POST'}).then(r=>r.json());
+  for(let i=0;i<steps.length;i++){steps[i].classList.add('active');await wait(600);
+    steps[i].classList.remove('active');steps[i].classList.add('done');}
+  let res; try{res=await callP;}catch(e){res=null;}
+  if(res){
+    const badges=[res.chunks+' đoạn','metadata ✓','backend: '+res.backend, 'store: '+res.count_in_store];
     steps.forEach((s,i)=>s.querySelector('.badge').textContent=badges[i]);
     document.getElementById('ingestState').textContent='HOÀN TẤT ✓';
-    btn.textContent='Nạp PDF khác';input.value='';loadInventory();
-  }else{
-    document.getElementById('ingestState').textContent='LỖI';
-    alert(result?.data?.detail||'Không thể OCR và nạp tài liệu.');btn.textContent='Thử lại';
-  }
-  btn.disabled=false;
+    loadInventory();
+  }else{document.getElementById('ingestState').textContent='LỖI';}
+  btn.textContent='Nạp lại';btn.disabled=false;
 }
 </script>
 </body></html>
-
