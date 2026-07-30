@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = Path(os.getenv("VLEARN_DATA", ROOT / "data"))
 TRANSCRIPT_DIR = DATA_DIR / "transcript"
 CHROMA_DIR = Path(os.getenv("VLEARN_CHROMA", ROOT / "chroma_store"))
+TICKET_DB = Path(os.getenv("VLEARN_TICKET_DB", DATA_DIR / "teacher_questions.sqlite3"))
 COLLECTION = "vlearn_lectures"
 
 # Embedding backend: "st" (sentence-transformers, multilingual, recommended)

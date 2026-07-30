@@ -67,6 +67,13 @@ data/transcript/  # 6 transcript bài giảng (data pack)
 | POST | `/api/ingest` | (re)build cơ sở tri thức từ transcript |
 | GET | `/api/inventory` | tồn kho học liệu theo buổi/chủ đề |
 | GET | `/api/health` | trạng thái, backend embed, số đoạn |
+| GET | `/api/questions?status=pending` | danh sách câu hỏi đang chờ giảng viên |
+| POST | `/api/questions/{ticket_id}/answer` | lưu câu trả lời đã xác nhận và đóng ticket |
+
+Khi `/api/chat` không tìm thấy căn cứ, backend tạo ticket trong
+`data/teacher_questions.sqlite3` và trả `status="escalated"` cùng `ticket_id`.
+Giao diện Lab Coach tự tải hàng đợi này; sau khi Coach gửi câu trả lời, ticket
+chuyển từ `pending` sang `answered`.
 
 ## Mở rộng (roadmap gợi ý cho demo)
 

@@ -6,6 +6,7 @@ import os
 import re
 import sqlite3
 import uuid
+from contextlib import contextmanager
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal, TypedDict
@@ -170,10 +171,15 @@ def local_pdf_answer(question: str) -> dict | None:
     }
 
 
-def database() -> sqlite3.Connection:
+@contextmanager
+def database():
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
-    return connection
+    try:
+        yield connection
+        connection.commit()
+    finally:
+        connection.close()
 
 
 def init_database() -> None:

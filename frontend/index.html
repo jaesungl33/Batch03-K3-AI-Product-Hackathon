@@ -133,6 +133,13 @@
   table.mats td{padding:11px 14px;border-bottom:1px solid var(--line)}table.mats tr:last-child td{border-bottom:0}
   .tp{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
   .tp.theory{color:var(--navy);background:#eaf0fb}.tp.lab{color:var(--green);background:var(--green-soft)}
+  .question-panel{margin-top:20px}
+  .question-text{font-weight:600;color:var(--navy);min-width:260px}
+  .question-meta{font-size:11px;color:var(--muted);margin-top:4px}
+  .answer-box{display:flex;gap:8px;min-width:340px}
+  .answer-box textarea{flex:1;min-height:58px;resize:vertical;border:1px solid var(--line);border-radius:9px;padding:9px 10px;font-family:inherit;font-size:12.5px}
+  .answer-box button{align-self:flex-end;border:0;border-radius:9px;background:var(--navy);color:#fff;padding:9px 12px;font-weight:700;cursor:pointer}
+  .answer-box button:disabled{opacity:.55}
   .banner{background:var(--red-soft);color:var(--red);font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:10px;margin-bottom:14px;display:none}
   .banner.show{display:block}
 </style></head><body>
@@ -225,6 +232,18 @@
         </div>
       </div>
     </div>
+    <div class="panel question-panel">
+      <div class="panel-head">
+        <span class="h">💬 Câu hỏi chờ giảng viên</span>
+        <span class="tag" id="questionCount">—</span>
+      </div>
+      <table class="mats">
+        <thead><tr><th>Câu hỏi</th><th>Trả lời đã xác nhận</th></tr></thead>
+        <tbody id="questionsBody">
+          <tr><td colspan="2" style="text-align:center;color:var(--muted)">Đang tải…</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div></div>
 </div>
 
@@ -233,7 +252,7 @@ const API=location.origin;
 function go(s){document.querySelectorAll('.screen').forEach(el=>el.classList.remove('show'));
   document.getElementById(s).classList.add('show');
   if(s!=='student')closeSlide();
-  if(s==='coach')loadInventory();}
+  if(s==='coach'){loadInventory();loadQuestions();}}
 
 /* ---------- student chat ---------- */
 const inner=document.getElementById('chatinner');
@@ -335,6 +354,42 @@ async function loadInventory(){
       <td><span class="tp ${r.type==='lab'?'lab':'theory'}">${esc(r.type||'')}</span></td><td>${r.chunks}</td></tr>`).join('');
     document.getElementById('matsBody').innerHTML=rows||'<tr><td colspan="4" style="text-align:center;color:var(--muted)">Chưa có dữ liệu — bấm Nạp & Embed</td></tr>';
   }catch(e){document.getElementById('matsBody').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--red)">Lỗi kết nối server</td></tr>';}
+}
+async function loadQuestions(){
+  const body=document.getElementById('questionsBody');
+  try{
+    const rows=await fetch(API+'/api/questions?status=pending').then(async r=>{
+      if(!r.ok)throw new Error(await r.text()); return r.json();
+    });
+    document.getElementById('questionCount').textContent=rows.length+' đang chờ';
+    body.innerHTML=rows.map(q=>`<tr>
+      <td><div class="question-text">${esc(q.question)}</div>
+        <div class="question-meta">Mã ${esc(q.id)} · ${esc(q.created_at||'')}</div></td>
+      <td><div class="answer-box">
+        <textarea id="answer-${q.id}" placeholder="Nhập câu trả lời chính thức…"></textarea>
+        <button onclick="answerQuestion('${q.id}',this)">Gửi</button>
+      </div></td></tr>`).join('')
+      ||'<tr><td colspan="2" style="text-align:center;color:var(--muted)">Không có câu hỏi đang chờ.</td></tr>';
+  }catch(e){
+    document.getElementById('questionCount').textContent='LỖI';
+    body.innerHTML='<tr><td colspan="2" style="text-align:center;color:var(--red)">Không tải được hàng đợi câu hỏi.</td></tr>';
+  }
+}
+async function answerQuestion(id,button){
+  const input=document.getElementById('answer-'+id);
+  const answer=(input.value||'').trim();
+  if(answer.length<2){input.focus();return;}
+  button.disabled=true;button.textContent='Đang gửi…';
+  try{
+    const response=await fetch(API+'/api/questions/'+id+'/answer',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({answer})
+    });
+    if(!response.ok)throw new Error(await response.text());
+    await loadQuestions();
+  }catch(e){
+    button.disabled=false;button.textContent='Thử lại';
+  }
 }
 async function runIngest(){
   const btn=document.getElementById('ingestBtn'); if(btn.disabled)return;
